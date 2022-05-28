@@ -1,6 +1,6 @@
 <launch>
   <arg name="map_path"/> 
-	<arg name="ns" default=""/> 
+  <arg name="ns" default=""/> 
   <arg name="kbd_teleop" default="false"/>
   <arg name="rqt_teleop" default="false"/>
   <arg name="visualize" default="true"/>
@@ -21,7 +21,7 @@
     <param name="robot_mode" value="$(arg robot_mode)" type="int"/>
     <param name="enable_groups" value="$(arg enable_groups)" type="bool"/>
     <remap from="/tf" to="/$(arg ns)/tf"/>
-		<remap from="/clock" to="/$(arg ns)/clock"/>
+    <remap from="/clock" to="/$(arg ns)/clock"/>
   </node>
 
 

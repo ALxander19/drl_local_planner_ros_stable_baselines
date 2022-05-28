@@ -14,9 +14,10 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   message_generation
   geometry_msgs
+  rl_msgs
 )
 
-find_package(PCL REQUIRED)
+find_package(PCL 1.3 REQUIRED COMPONENTS common io)
 find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
@@ -57,49 +58,26 @@ include_directories(
   include/${PROJECT_NAME}
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
 )
+
+# for plc to work
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 add_definitions(${EIGEN3_DEFINITIONS})
 
-add_library(rlLocalPlanner 	
-  src/rl_local_planner.cpp
-)
+add_library(rlLocalPlanner src/rl_local_planner.cpp)
+add_dependencies(rlLocalPlanner ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rlLocalPlanner ${catkin_LIBRARIES} ${boost_LIBRARIES})
 
-add_dependencies(rlLocalPlanner
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-)
+add_executable(wp_generator src/wp_generator.cpp )
+add_dependencies(wp_generator ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(wp_generator ${catkin_LIBRARIES})
 
-target_link_libraries(rlLocalPlanner
-   ${catkin_LIBRARIES}
-   ${boost_LIBRARIES}
-)
-
-add_executable(wp_generator
-  src/wp_generator.cpp
-)
-
-add_dependencies(wp_generator
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-)
-
-target_link_libraries(wp_generator
-  ${catkin_LIBRARIES}
-)
-
-add_executable(image_generator
-  src/image_generator.cpp
-)
-
-add_dependencies(image_generator
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
-)
-
-target_link_libraries(image_generator
-  ${catkin_LIBRARIES}
-)
+add_executable(image_generator src/image_generator.cpp)
+add_dependencies(image_generator ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(image_generator ${catkin_LIBRARIES})
 
 
 
